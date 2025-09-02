@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flipbook CV / Katajisto</title>
+<style>
+  body { 
+    background:#f4f4f4; 
+    margin:0; 
+    font-family: Arial, sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+  }
+  h1 { padding:20px; text-align:center; }
+  #flipbook { 
+    display: flex; 
+    justify-content: center; 
+    width: 90%; 
+    max-width: 600px; /* Yksi sivu kerrallaan desktopilla */
+    margin:0 auto; 
+    cursor:pointer; 
+    perspective:1000px;
+  }
+  .page-container {
+    width: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+    display: flex;
+    justify-content: center;
+  }
+  #flippage {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    backface-visibility: hidden;
+  }
+  .meta { margin-top:5px; font-size:14px; color:#333; text-align:center; }
+
+  /* Responsiivinen: mobiilissa pakotetaan 100% leveys */
+  @media (max-width: 600px) {
+    #flipbook {
+      max-width: 100%;
+    }
+    #flippage {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<h1>Flipbook CV / Katajisto</h1>
+<div id="flipbook">
+  <div class="page-container">
+    <img id="flippage" src="pages/page1.jpg" alt="CV-sivu">
+  </div>
+</div>
+<div class="meta">
+  Sivu <span id="pageIdx">1</span> / <span id="pageCount">9</span>
+</div>
+
+<script>
+const imagePages = [
+  "pages/page1.jpg",
+  "pages/page2.jpg",
+  "pages/page3.jpg",
+  "pages/page4.jpg",
+  "pages/page5.jpg",
+  "pages/page6.jpg",
+  "pages/page7.jpg",
+  "pages/page8.jpg",
+  "pages/page9.jpg"
+];
+
+let currentPage = 0;
+const pageIdx = document.getElementById("pageIdx");
+const flipImg = document.getElementById("flippage");
+const pageContainer = document.querySelector('.page-container');
+
+function flipToPage(newPage) {
+  pageContainer.style.transform = 'rotateY(90deg)';
+  setTimeout(() => {
+    currentPage = newPage;
+    flipImg.src = imagePages[currentPage];
+    pageContainer.style.transform = 'rotateY(0deg)';
+    pageIdx.textContent = currentPage + 1;
+  }, 300);
+}
+
+flipImg.addEventListener("click", (e) => {
+  const bounds = flipImg.getBoundingClientRect();
+  if(e.clientX < bounds.left + bounds.width/2){
+    if(currentPage > 0) flipToPage(currentPage - 1);
+  } else {
+    if(currentPage < imagePages.length -1) flipToPage(currentPage + 1);
+  }
+});
+</script>
+</body>
+</html>
